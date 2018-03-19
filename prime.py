@@ -60,6 +60,10 @@ class Prime:
 			i = next[i]
 		return primes
 
+	@staticmethod
+	def euler_simple(n):
+		primes = []
+
 
 	@staticmethod
 	def naive(n):
@@ -95,59 +99,86 @@ class Prime:
 			i += 1
 		return primes
 
+	@staticmethod
+	def eratosthenes(n):
+		is_prime = [True] * (n + 1)
+		primes = []
+		for i in range(2, n + 1):
+			if is_prime[i]:
+				j = i * i
+				while j <= n:
+					is_prime[j] = False
+					j += i
+		for i in range(2, n + 1):
+			if is_prime[i]:
+				primes.append(i)
+		return primes
 
-size = 10000
 
-
-def naive_time():
+def naive_time(n):
 	SETUP_CODE = """
 from __main__ import Prime
 	"""
 	TEST_CODE = """
 prime = Prime()
-prime.naive(1000000)
-	"""
+prime.naive(%s)
+	""" % n
 	times = timeit.timeit(setup=SETUP_CODE, stmt=TEST_CODE, number=1)
 	print(times)
 
 
-def naive_better_time():
+def naive_better_time(n):
 	SETUP_CODE = """
 from __main__ import Prime
 	"""
 	TEST_CODE = """
 prime = Prime()
-prime.naive_better(1000000)
-		"""
+prime.naive_better(%s)
+		""" % n
 	times = timeit.timeit(setup=SETUP_CODE, stmt=TEST_CODE, number=1)
 	print(times)
 
 
-def euler_time():
+def euler_time(n):
 	SETUP_CODE = """
 from __main__ import Prime
 	"""
 	TEST_CODE = """
 prime = Prime()
-prime.euler(1000000)
-	"""
+prime.euler(%s)
+	""" % n
 	times = timeit.timeit(setup=SETUP_CODE, stmt=TEST_CODE, number=1)
 	print(times)
 
-def euler_2_time():
+
+def euler_2_time(n):
 	SETUP_CODE = """
 from __main__ import Prime
 	"""
 	TEST_CODE = """
 prime = Prime()
-prime.euler_2(1000000)
+prime.euler_2(%s)
+	""" % n
+	times = timeit.timeit(setup=SETUP_CODE, stmt=TEST_CODE, number=1)
+	print(times)
+
+
+def eratosthenes_time(n):
+	SETUP_CODE = """
+from __main__ import Prime
 	"""
+	TEST_CODE = """
+prime = Prime()
+prime.eratosthenes(%s)
+	""" % n
 	times = timeit.timeit(setup=SETUP_CODE, stmt=TEST_CODE, number=1)
 	print(times)
 
 
 if __name__ == "__main__":
-	naive_time()
-	naive_better_time()
-	euler_time()
-	euler_2_time()
+	size = 100
+	naive_time(size)
+	naive_better_time(size)
+	eratosthenes_time(size)
+	euler_time(size)
+	euler_2_time(size)
