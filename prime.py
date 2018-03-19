@@ -21,7 +21,7 @@ class Prime:
 				while k <= n:
 					next[prev[k]] = next[k]
 					prev[next[k]] = prev[k]
-					if n / k > i:
+					if n / i < k:
 						break
 					k *= i
 				j = next[j]
@@ -63,7 +63,20 @@ class Prime:
 	@staticmethod
 	def euler_simple(n):
 		primes = []
-
+		is_prime = [True] * (n + 1)
+		for i in range(2, n // 2 + 1):
+			if is_prime[i]:
+				primes.append(i)
+			for p in primes:
+				if n / i < p:
+					break
+				is_prime[i * p] = False
+				if i % p == 0:
+					break
+		for i in range(n // 2 + 1, n + 1):
+			if is_prime[i]:
+				primes.append(i)
+		return primes
 
 	@staticmethod
 	def naive(n):
@@ -115,70 +128,23 @@ class Prime:
 		return primes
 
 
-def naive_time(n):
+def prime_time_test(fn, n):
 	SETUP_CODE = """
 from __main__ import Prime
 	"""
 	TEST_CODE = """
 prime = Prime()
-prime.naive(%s)
-	""" % n
+%s(%s)
+	""" % (fn, n)
 	times = timeit.timeit(setup=SETUP_CODE, stmt=TEST_CODE, number=1)
-	print(times)
-
-
-def naive_better_time(n):
-	SETUP_CODE = """
-from __main__ import Prime
-	"""
-	TEST_CODE = """
-prime = Prime()
-prime.naive_better(%s)
-		""" % n
-	times = timeit.timeit(setup=SETUP_CODE, stmt=TEST_CODE, number=1)
-	print(times)
-
-
-def euler_time(n):
-	SETUP_CODE = """
-from __main__ import Prime
-	"""
-	TEST_CODE = """
-prime = Prime()
-prime.euler(%s)
-	""" % n
-	times = timeit.timeit(setup=SETUP_CODE, stmt=TEST_CODE, number=1)
-	print(times)
-
-
-def euler_2_time(n):
-	SETUP_CODE = """
-from __main__ import Prime
-	"""
-	TEST_CODE = """
-prime = Prime()
-prime.euler_2(%s)
-	""" % n
-	times = timeit.timeit(setup=SETUP_CODE, stmt=TEST_CODE, number=1)
-	print(times)
-
-
-def eratosthenes_time(n):
-	SETUP_CODE = """
-from __main__ import Prime
-	"""
-	TEST_CODE = """
-prime = Prime()
-prime.eratosthenes(%s)
-	""" % n
-	times = timeit.timeit(setup=SETUP_CODE, stmt=TEST_CODE, number=1)
-	print(times)
+	print("%s: %f" % (fn, times))
 
 
 if __name__ == "__main__":
-	size = 100
-	naive_time(size)
-	naive_better_time(size)
-	eratosthenes_time(size)
-	euler_time(size)
-	euler_2_time(size)
+	size = 2000000
+	# naive_time(size)
+	prime_time_test('Prime.naive_better', size)
+	prime_time_test('Prime.eratosthenes', size)
+	prime_time_test('Prime.euler', size)
+	prime_time_test('Prime.euler_2', size)
+	prime_time_test('Prime.euler_simple', size)
