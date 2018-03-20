@@ -22,7 +22,7 @@
 
 即暴力枚举，试除法。对于 2 到 N 的每一个数，都用小于它的所有数试除，来判断其是否为质数。时间复杂度 O(N^2)
 
-改进：判断一个数是否为质数时，用 2 到 $\sqrt{N}$的所有质数试除。代码如下：
+改进：判断一个数是否为质数时，用 2 到 ![equation](https://latex.codecogs.com/svg.latex?\Medium&space;\sqrt{N})的所有质数试除。代码如下：
 
 ```
 def naive_better(n):
